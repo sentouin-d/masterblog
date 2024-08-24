@@ -13,7 +13,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 @app.route("/")
 def index():
     with open('mock.json', 'r', encoding='utf-8') as mock_data:
-        blog_posts = json.load(mock_data)
+        blog_posts = json.load(mock_data).values()
 
     return render_template('index.html', posts=blog_posts)
 
@@ -33,13 +33,44 @@ def add():
         else:
             with open('mock.json', 'r', encoding='utf-8') as mock_data:
                 blog_posts = json.load(mock_data)
+                post_id = str(uuid.uuid4())
                 new_post = {
-                    "id": str(uuid.uuid4()),
                     "author": author,
                     "title": title,
                     "content": content
                 }
-                blog_posts.append(new_post)
+                blog_posts[post_id] = new_post
+
+                with open('mock.json', 'w', encoding='utf-8') as mock_write:
+                    updated_posts = json.dumps(blog_posts)
+                    mock_write.write(updated_posts)
+
+            return redirect(url_for('index'))
+
+    return render_template("add.html")
+
+@app.route("/update/<string:id>", methods=["GET", "POST"])
+def update(id):
+    if request.method == "POST":
+        title = request.form['title']
+        author = request.form['author']
+        content = request.form['content']
+        error = None
+
+        if not (author or title):
+            error = 'Missing author or title'
+
+        if error is not None:
+            flash(error)
+        else:
+            with open('mock.json', 'r', encoding='utf-8') as mock_data:
+                blog_posts = json.load(mock_data)
+                updated_post = {
+                    "author": author,
+                    "title": title,
+                    "content": content
+                }
+                blog_posts[id] = updated_post
 
                 with open('mock.json', 'w', encoding='utf-8') as mock_write:
                     updated_posts = json.dumps(blog_posts)
