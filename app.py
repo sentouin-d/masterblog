@@ -42,8 +42,7 @@ def add():
                 blog_posts[post_id] = new_post
 
                 with open('mock.json', 'w', encoding='utf-8') as mock_write:
-                    updated_posts = json.dumps(blog_posts)
-                    mock_write.write(updated_posts)
+                    mock_write.write(json.dumps(blog_posts))
 
             return redirect(url_for('index'))
 
@@ -51,6 +50,13 @@ def add():
 
 @app.route("/update/<string:id>", methods=["GET", "POST"])
 def update(id):
+    post = {}
+    blog_posts = {}
+
+    with open('mock.json', 'r', encoding='utf-8') as mock_data:
+        blog_posts = json.load(mock_data)
+        post = blog_posts[id]
+
     if request.method == "POST":
         title = request.form['title']
         author = request.form['author']
@@ -63,19 +69,27 @@ def update(id):
         if error is not None:
             flash(error)
         else:
-            with open('mock.json', 'r', encoding='utf-8') as mock_data:
-                blog_posts = json.load(mock_data)
-                updated_post = {
-                    "author": author,
-                    "title": title,
-                    "content": content
-                }
-                blog_posts[id] = updated_post
+            updated_post = {
+                "author": author,
+                "title": title,
+                "content": content
+            }
+            blog_posts[id] = updated_post
 
-                with open('mock.json', 'w', encoding='utf-8') as mock_write:
-                    updated_posts = json.dumps(blog_posts)
-                    mock_write.write(updated_posts)
-
+            with open('mock.json', 'w', encoding='utf-8') as mock_write:
+                mock_write.write(json.dumps(blog_posts))
+            
             return redirect(url_for('index'))
 
-    return render_template("add.html")
+    return render_template("update.html", post=post, post_id=id)
+
+@app.route("/delete/<string:id>", methods=["POST",])
+def delete(id):
+    with open('mock.json', 'r', encoding='utf-8') as mock_data:
+        blog_posts = json.load(mock_data)
+        del blog_posts[id]
+
+        with open('mock.json', 'w', encoding='utf-8') as mock_write:
+            mock_write.write(json.dumps(blog_posts))
+
+    return redirect(url_for('index'))
