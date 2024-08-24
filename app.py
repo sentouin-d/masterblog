@@ -93,3 +93,6 @@ def delete(id):
             mock_write.write(json.dumps(blog_posts))
 
     return redirect(url_for('index'))
+
+if __name__ == '__main__':
+    app.run()

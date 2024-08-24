@@ -1,1 +1,4 @@
-{"2": {"author": "John Doe", "title": "Second Post", "content": "This is another post."}, "68b77b23-6ebc-4510-86ad-6a603c9d9dfc": {"author": "Sentouin D", "title": "intro", "content": "hello"}}
+{
+    "1": {"author": "John Doe", "title": "First Post", "content": "This is my first post."},
+    "2": {"author": "Jane Doe", "title": "Second Post", "content": "This is another post."}
+}
