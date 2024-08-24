@@ -10,6 +10,9 @@
     {% block header %}
         <h1>{% block title %}Welcome to My Flask blog{% endblock %}</h1>
     {% endblock %}
+    {% block nav %}
+        <a href="/add">Add a new post</a>
+    {% endblock %}
     {% block content %}
         {% for post in posts %}
             <div class="post">
